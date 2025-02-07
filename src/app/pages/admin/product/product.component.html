@@ -15,25 +15,22 @@
           </div>
 
           <div class="card-body product-list-container">
-            <div class="row">
+            <div class="row g-3">
               <div class="" [ngClass]="isSidePanelVisible ? 'col-lg-3' : 'col-lg-2' " *ngFor="let product of productList">
-                <div class="card h-75 mt-3">
+                <div class="card h-100 mt-3">
                   <img [src]="product.productImageUrl" class="card-img-top img-fluid h-50" style="object-fit: cover"
                        alt="...">
                   <div class="card-body">
                     <h5 class="card-title">{{ product.productName }}</h5>
                     <p class="card-text">{{ product.categoryName }}</p>
-                    <div class="row mt-2">
+                    <div class="row">
                       <div class="col-6">
                         <a class="btn btn-primary text-center w-100" (click)="onEdit(product)">Edit</a>
-
                       </div>
                       <div class="col-6">
                         <a class="btn btn-danger text-center w-100" (click)="onDelete(product)">Delete</a>
                       </div>
                     </div>
-
-
                   </div>
                 </div>
               </div>
