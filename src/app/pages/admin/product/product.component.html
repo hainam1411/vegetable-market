@@ -1,3 +1,4 @@
+<filterComponent (filterChanged)="onFilterChanged($event)" ></filterComponent>
 <div class="row ">
   <div [ngClass]="isSidePanelVisible ? 'col-8' : 'col-12' ">
     <div class="card">
@@ -14,14 +15,15 @@
 
       <div class="card-body product-list-container">
         <div class="row">
-          <div class="" [ngClass]="isSidePanelVisible ? 'col-3' : 'col-2' " *ngFor="let product of filterProductList">
+          <div class="" [ngClass]="isSidePanelVisible ? 'col-lg-3 col-sm-4' : 'col-lg-2 col-sm-4' " *ngFor="let product of filterProductList">
             <div class="card h-75 mt-0">
               <img [src]="product.productImageUrl" class="card-img-top img-fluid h-50 mt-0" style="object-fit: cover"
                    alt="...">
-              <div class="card-body">
-                <h4 class="card-title fw-bolder">{{ product.productName }}</h4>
-                <p class="card-text">{{ product.categoryName }}</p>
-                <p class="card-text fw-bold">{{ product.productPrice | currency: '$'}}</p>
+              <div class="card-body ">
+                <h4 class="card-title fw-bolder mb-0">{{ product.productName }}</h4>
+                <p class="card-text mb-0">{{ product.categoryName }}</p>
+                <p class="card-text mb-0 fw-bold">{{ product.productPrice | currency: '$'}}</p>
+                <p class="card-text mb-2">{{ product.createdDate |date: 'dd/MM/yyyy' }}</p>
                 <div class="row">
                   <div class="col-6">
                     <a class="btn btn-primary text-center w-100" (click)="onEdit(product)">Edit</a>

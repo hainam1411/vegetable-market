@@ -3,10 +3,12 @@ import {CommonModule,} from '@angular/common';
 import {FormsModule, NgForm} from '@angular/forms';
 import {ProductService} from '../../../services/product/product.service';
 import {SearchService} from '../../../services/search/search.service';
+import {FilterService} from '../../../services/filter/filter.service';
+import {FilterComponent} from '../filter/filter.component';
 
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FilterComponent],
   templateUrl: './product.component.html',
   standalone: true,
   styleUrl: './product.component.css'
@@ -30,6 +32,7 @@ export class ProductComponent implements OnInit {
   categoryList: any [] = [];
   productList: any [] = [];
   filterProductList: any [] = [];
+  filterOptions: any = {};
 
   imageRegex = new RegExp(
     "^(https?:\\/\\/(?:[\\w.-]+)\\/.*(?:\\.(png|jpg|jpeg|gif|svg|webp))?(\\?.*)?)|" +
@@ -53,7 +56,7 @@ export class ProductComponent implements OnInit {
     )
   }
 
-  constructor(private productService: ProductService, private searchService: SearchService) {
+  constructor(private productService: ProductService, private searchService: SearchService, private filterService: FilterService) {
   }
 
   ngOnInit() {
@@ -140,6 +143,11 @@ export class ProductComponent implements OnInit {
 
   validateImageURL() {
     this.imageInvalid = !this.imageRegex.test(this.productObj.productImageUrl);
+  }
+
+  onFilterChanged (filterData: any) {
+    this.filterOptions = filterData;
+    this.filterProductList = this.filterService.filterProducts(this.productList, this.filterOptions)
   }
 
 

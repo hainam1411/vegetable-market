@@ -15,12 +15,7 @@ import {FilterComponent} from '../filter/filter.component';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  constructor(private searchService: SearchService) {}
 
-  onSearch (event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchService.setSearchText(input.value);
-  }
 
 
 }
