@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {SearchService} from '../../../services/search/search.service';
+import {FilterComponent} from '../filter/filter.component';
 
 @Component({
   selector: 'app-layout',
   imports: [
     RouterOutlet,
-    RouterLink
+    RouterLink,
+    FilterComponent
   ],
   templateUrl: './layout.component.html',
   standalone: true,
