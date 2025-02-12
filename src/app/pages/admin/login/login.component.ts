@@ -21,9 +21,12 @@ export class LoginComponent {
       this.router.navigateByUrl('/products');
       console.log("loged in")
 
-    }else  {
-      alert('Wrong account or password');
-      console.log('Wrong password')
+    }else if (this.loginObj.userName == "guest1" && this.loginObj.password == "12345"){
+      this.router.navigateByUrl('/shop');
+      console.log('guest1 logged in')
+    } else {
+      alert('Wrong username or password, try again')
+      console.log('login failed')
     }
   }
 }
