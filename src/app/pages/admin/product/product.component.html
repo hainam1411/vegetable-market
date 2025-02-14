@@ -1,6 +1,6 @@
-<filterComponent (filterChanged)="onFilterChanged($event)" ></filterComponent>
+<app-filter [categoryList]="categoryList" (filterChanged)="onFilterChanged($event)" ></app-filter>
 <div class="row ">
-  <div [ngClass]="isSidePanelVisible ? 'col-8' : 'col-12' ">
+  <div >
     <div class="card">
       <div class="card-header bg-primary-subtle">
         <div class="row">
@@ -8,14 +8,23 @@
             Products list
           </div>
           <div class="col-6 text-end">
-            <button class="btn btn-sm btn-success" (click)="openSidePanel()">New</button>
+            <button class="btn btn-sm btn-success" (click)="openModal()">New</button>
           </div>
         </div>
       </div>
 
       <div class="card-body product-list-container">
         <div class="row">
-          <div class="" [ngClass]="isSidePanelVisible ? 'col-lg-3 col-sm-4' : 'col-lg-2 col-sm-4' " *ngFor="let product of filterProductList">
+<!--          spinner-->
+          <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center w-100">
+
+            <div class="spinner-border text-success" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+<!--      Product list  -->
+          <div class="col-lg-2 col-sm-4 " *ngFor="let product of filterProductList">
             <div class="card h-75 mt-0">
               <img [src]="product.productImageUrl" class="card-img-top img-fluid h-50 mt-0" style="object-fit: cover"
                    alt="...">
@@ -40,32 +49,28 @@
     </div>
   </div>
 
-
-  <div class="col-4 " *ngIf="isSidePanelVisible">
-    <div class="card">
-      <div class="card-header bg-primary-subtle">
-        <div class="row">
-          <div class="col-6">
-            New products
-          </div>
-          <div class="col-6 text-end">
-            <button class="btn btn-sm btn-danger" (click)="closeSidePanel()">Close</button>
-          </div>
+<!--Create & update product-->
+  <!-- Modal for Create & Update Product -->
+  <div class="modal fade" id="productModal" #productModal tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- modal-lg giúp modal rộng hơn -->
+      <div class="modal-content">
+        <div class="modal-header bg-primary-subtle">
+          <h5 class="modal-title" id="productModalLabel">{{ productObj.productId ? 'Update Product' : 'New Product' }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      </div>
-        <div class="card-body">
+
+        <div class="modal-body">
           <div class="row">
             <div class="col-6">
               <label>SKU</label>
               <input type="text" [(ngModel)]="productObj.productSku" class="form-control" required #sku="ngModel">
-              <p *ngIf="sku.invalid  && sku.touched" class="text-danger"> this box is not allowed blank</p>
+              <p *ngIf="sku.invalid && sku.touched" class="text-danger">This field is required</p>
             </div>
             <div class="col-6">
               <label>Name</label>
-              <input type="text" [(ngModel)]="productObj.productName" class="form-control" required minlength="3"
-                     #name="ngModel">
+              <input type="text" [(ngModel)]="productObj.productName" class="form-control" required minlength="3" #name="ngModel">
               <p *ngIf="name.invalid && name.touched" class="text-danger">
-                <span *ngIf="name.errors?.['required']">Product name is not allowed blank</span>
+                <span *ngIf="name.errors?.['required']">Product name is required</span>
                 <span *ngIf="name.errors?.['minlength']">Must be at least 3 characters</span>
               </p>
             </div>
@@ -73,77 +78,50 @@
 
           <div class="row">
             <div class="col-6">
-              <label>Short name</label>
-              <input type="text" [(ngModel)]="productObj.productShortName" class="form-control">
-            </div>
-            <div class="col-6">
               <label>Price</label>
-              <input type="number" inputmode="numeric" [(ngModel)]="productObj.productPrice" class="form-control"
-                     required
-                     min="1" #price="ngModel">
-              <p *ngIf="price.invalid &&  price.touched" class="text-danger">
-                <span *ngIf="price.errors?.['required']">Price is not allowed blank</span>
-                <span *ngIf="price.errors?.['min']"> Price must be greater than 0</span>
+              <input type="number" [(ngModel)]="productObj.productPrice" class="form-control" required min="1" #price="ngModel">
+              <p *ngIf="price.invalid && price.touched" class="text-danger">
+                <span *ngIf="price.errors?.['required']">Price is required</span>
+                <span *ngIf="price.errors?.['min']">Must be greater than 0</span>
               </p>
             </div>
-          </div>
-
-          <div class="row">
             <div class="col-6">
               <label>Category</label>
-              <select name="" id="" [(ngModel)]="productObj.categoryId" class="form-select" required
-                      #category="ngModel">
+              <select [(ngModel)]="productObj.categoryId" class="form-select" required #category="ngModel">
                 <option value="" disabled selected>Select category</option>
                 <option *ngFor="let cate of categoryList" [value]="cate.categoryId">{{ cate.categoryName }}</option>
               </select>
-              <p *ngIf="category.invalid && category.touched" class="text-danger">
-                <span *ngIf="category.errors?.['required']">Please select a category</span>
-              </p>
-
+              <p *ngIf="category.invalid && category.touched" class="text-danger">Please select a category</p>
             </div>
-            <div class="col-6">
-              <label>Delivery time span</label>
-              <input type="text" [(ngModel)]="productObj.deliveryTimeSpan" class="form-control">
-            </div>
-
           </div>
+
           <div class="row">
             <div class="col-12">
-              <label>Image</label>
-              <input type="text" [(ngModel)]="productObj.productImageUrl" class="form-control" required
-                     (blur)="validateImageURL()"
-                     #image="ngModel">
-              <p *ngIf="imageInvalid" class="text-danger">
-                <span *ngIf="!productObj.productImageUrl">Image is not allowed blank</span>
-                <span
-                  *ngIf="productObj.productImageUrl">Invalid image URL format (etc: https://example.com/image.jpg)</span>
-              </p>
-
+              <label>Image URL</label>
+              <input type="text" [(ngModel)]="productObj.productImageUrl" (blur)="validateImageURL()" class="form-control" required #image="ngModel">
+              <p *ngIf="image.invalid && image.touched" class="text-danger">Image URL is required</p>
+              <p *ngIf="image.invalid" class=text-danger>Invalid URL, please try again (etc: https://example.com/images/product1.jpg)</p>
             </div>
           </div>
+
           <div class="row">
             <div class="col-12">
               <label>Description</label>
-              <input type="text" [(ngModel)]="productObj.productDescription" class="form-control" required
-                     #desc="ngModel">
-              <p *ngIf="desc.invalid && desc.touched" class="text-danger">Description is not allowed blank</p>
+              <textarea [(ngModel)]="productObj.productDescription" class="form-control" required #desc="ngModel"></textarea>
+              <p *ngIf="desc.invalid && desc.touched" class="text-danger">Description is required</p>
             </div>
           </div>
-          <div class="row pt-3 ps-2">
-            <div class="col-6 ">
-              <button class="btn btn-danger" (click)="closeSidePanel()">Cancel</button>
-            </div>
-            <div class="col-6 ">
-              <button class="btn btn-success" *ngIf="productObj.productId == 0" (click)="onSave()" [disabled]="isFormInvalid">Create product
-              </button>
-              <button class="btn btn-success" *ngIf="productObj.productId !== 0" (click)="onUpdate()">Update product
-              </button>
-            </div>
-          </div>
-
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" *ngIf="!productObj.productId" (click)="onSave()" [disabled]="isFormInvalid">Create Product</button>
+          <button class="btn btn-success" *ngIf="productObj.productId" (click)="onUpdate()">Update Product</button>
+        </div>
+      </div>
     </div>
   </div>
+
 
 
 </div>

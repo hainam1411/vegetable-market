@@ -23,22 +23,37 @@ export class FilterService {
     }
 
     if (filterOptions.sortByName) {
-      filteredProducts.sort((a, b) => filterOptions.sortByName === 'asc' ? a.productName.localeCompare(b.productName) : b.productName.localeCompare(a.productName));
+      filteredProducts.sort((a, b) => {
+        const nameA = (a.productName || '').toString().trim().toLowerCase();
+        const nameB = (b.productName || '').toString().trim().toLowerCase();
+        return filterOptions.sortByName === 'asc' ? a.productName.localeCompare(b.productName) : b.productName.localeCompare(a.productName);
+      });
+
     }
 
     return filteredProducts;
   }
 
   private filterByCategory(categoryId?: number) {
-    return (product: any) => !categoryId || product.categoryId === categoryId;
+    return (product: any) => {
+      console.log(`Filtering by category: ${categoryId}, Product category: ${product.categoryId}`);
+      return !categoryId || product.categoryId === categoryId;
+    };
   }
+
 
   private filterByDate(from?: string, to?: string) {
     return (product: any) => {
-      const createdDate = new Date(product.createdDate);
-      return (!from || createdDate >= new Date(from)) && (!to || createdDate <= new Date(to));
+      const createdDate = new Date(product.createdDate).toISOString().split("T")[0];
+      const fromDate = from ? new Date(from).toISOString().split("T")[0] : null;
+      const toDate = to ? new Date(to).toISOString().split("T")[0] : null;
+
+      console.log("Checking:", { createdDate, fromDate, toDate });
+
+      return (!fromDate || createdDate >= fromDate) && (!toDate || createdDate <= toDate);
     };
   }
+
 
   private filterByPriceRange(min?: number, max?: number) {
     return (product: any) => {

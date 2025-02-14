@@ -6,17 +6,25 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class SearchService {
 
-  constructor() { }
+
   private searchText = new BehaviorSubject<string>('');
   searchText$ = this.searchText.asObservable();
 
-  private searchResults = new BehaviorSubject<string>("")
+  private searchResults = new BehaviorSubject<any[]>([])
   searchResults$ = this.searchResults.asObservable()
-
+  constructor() { }
   setSearchText(text: string) {
     this.searchText.next(text);
   }
-  setSearchResults(results: string) {
-    this.searchResults.next(results);
+  setSearchResults(products: any[], text: string) {
+    if (!text) {
+      this.searchResults.next(products);
+    } else  {
+      const filtered = products.filter(product =>
+      product.productName.toLowerCase().includes(text.toLowerCase())
+      );
+      this.searchResults.next(filtered);
+    }
+
   }
 }

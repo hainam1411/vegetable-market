@@ -8,7 +8,6 @@ import {FilterComponent} from '../filter/filter.component';
   imports: [
     RouterOutlet,
     RouterLink,
-    FilterComponent
   ],
   templateUrl: './layout.component.html',
   standalone: true,

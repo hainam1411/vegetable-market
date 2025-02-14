@@ -4,6 +4,6 @@
 }
 
 .product-list-container::-webkit-scrollbar {
-  display: none;
+  width: 8px;
 }
 

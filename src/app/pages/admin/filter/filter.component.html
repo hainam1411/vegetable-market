@@ -1,57 +1,63 @@
 <div class="card my-3">
   <div class="card-header bg-light">
-    <h5 class="mb-0 fw-bold">Sort by</h5>
+    <h5 class="mb-0 fw-bold">Sort & Filter Products</h5>
   </div>
   <div class="card-body">
-    <div class="row">
+    <div class="row g-3 align-items-end">
 
-      <div class=" col-lg-1 col-md-4 col-sm-12">
-        <label class="fw-bold">Price</label><br>
-        <select class="form-select-sm" [(ngModel)]="filterProduct.price" (change)="onFilterChange()">
+      <!-- Sort by Price -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="fw-bold">Price</label>
+        <select class="form-select form-select-sm" [(ngModel)]="filterProduct.price" (change)="onFilterChange()">
           <option value="">All</option>
-          <option>Up to</option>
-          <option>Down to</option>
-        </select>
-      </div>
-      <div class="col-lg-1 col-md-4 col-sm-12">
-        <label class="fw-bold">Sort by name</label><br>
-        <select class="form-select-sm" [(ngModel)]="filterProduct.sortByName" (change)="onFilterChange()">
-          <option value="" disabled>All</option>
-          <option>A-Z</option>
-          <option>Z-A</option>
+          <option value="asc">Low to High</option>
+          <option value="desc">High to Low</option>
         </select>
       </div>
 
-      <div class="col-lg-1 col-md-2 col-sm-12">
-      <label class="fw-bold">Category</label><br>
-      <select class="form-select-sm"  [(ngModel)]="filterProduct.category" (change)="onFilterChange()" >
-        <option value=""></option>
-
-      </select>
-    </div>
-      <div class="col-lg-1 col-md-4 col-sm-12">
-        <label class="fw-bold">Name</label>
-        <input type="text" class="form-control-sm" placeholder="Product name" (input)="onSearch($event)">
-      </div>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-lg-3 col-md-12 col-sm-12">
-      <label class="fw-bold">Time created</label>
-      <div class="time-create d-flex gap-2 align-items-center">
-        <input type="date" class="form-control-sm" [(ngModel)]="filterProduct.CreatedFrom" (change)="onFilterChange()">
-        <span>to</span>
-        <input type="date" class="form-control-sm" [(ngModel)]="filterProduct.CreatedTo" (change)="onFilterChange()">
+      <!-- Sort by Name -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="fw-bold">Sort by Name</label>
+        <select class="form-select form-select-sm" [(ngModel)]="filterProduct.sortByName" (change)="onFilterChange()">
+          <option value="">All</option>
+          <option value="asc">A - Z</option>
+          <option value="desc">Z - A</option>
+        </select>
       </div>
 
-    </div>
+      <!-- Category -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <label class="fw-bold">Category</label>
+        <select class="form-select form-select-sm" [(ngModel)]="filterProduct.category" (change)="onFilterChange()">
+          <option [value]="category.categoryId.toString()" *ngFor="let category of categoryList || []">
+            {{ category.categoryName }}
+          </option>
+        </select>
+      </div>
 
-      <div class="col-lg-2 col-md-12 col-sm-12">
-        <label class="fw-bold">Price range</label>
-        <div class="price-range d-flex gap-2 align-items-center">
-          <input type="number" class="form-control-sm" [(ngModel)]="filterProduct.priceFrom" (input)="onFilterChange()">
+      <!-- Product Name -->
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <label class="fw-bold">Product Name</label>
+        <input type="text" class="form-control form-control-sm" placeholder="Enter product name" (input)="onSearch($event)">
+      </div>
+
+      <!-- Created Date -->
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <label class="fw-bold">Time Created</label>
+        <div class="d-flex gap-2">
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="filterProduct.CreatedFrom" (change)="onFilterChange()">
           <span>to</span>
-          <input type="number" class="form-control-sm" [(ngModel)]="filterProduct.priceTo" (input)="onFilterChange()">
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="filterProduct.CreatedTo" (change)="onFilterChange()">
+        </div>
+      </div>
+
+      <!-- Price Range -->
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <label class="fw-bold">Price Range</label>
+        <div class="d-flex gap-2">
+          <input type="number" class="form-control form-control-sm" placeholder="Min" [(ngModel)]="filterProduct.priceFrom" (input)="onFilterChange()">
+          <span>to</span>
+          <input type="number" class="form-control form-control-sm" placeholder="Max" [(ngModel)]="filterProduct.priceTo" (input)="onFilterChange()">
         </div>
       </div>
 
